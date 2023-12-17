@@ -6,7 +6,7 @@
 class MySocket {
     static constexpr size_t MAX_NUMBER_OF_ACCESS_POINTS = 10;
     static constexpr size_t MAX_MESSAGE_RECEIVED_LENGTH = 100;
-    static constexpr size_t REMOTE_PORT = 8872; // standard HTTP port
+    static constexpr size_t REMOTE_PORT = 8817; // standard HTTP port
 
 public:
     MySocket() : _net(NetworkInterface::get_default_instance())
@@ -113,15 +113,17 @@ public:
         result = _socket.recv(buffer + received_bytes, remaining_bytes);
         while(1){
             if(result < 0){
+                printf("Connect error\n");
                 printf("Trying to reconnect\n");
                 connect_socket();
             }else if(result > 0){
                 printf("%.*s\r\n\r\n", strstr(buffer, "\n") - buffer, buffer);
                 break;
             }else{
-                wait_us(1000);
+                printf("Server shut down\n");
             }
         }
+
         return true;
         
     }

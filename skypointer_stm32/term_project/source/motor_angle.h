@@ -1,27 +1,31 @@
 #include<stdio.h>
 #include<math.h>
 #include<iostream>
+#include "arm_math.h"
+#include "arm_math_types.h"
+#include "fast_math_functions.h"
+
 using namespace std;
 #define pi 3.1415926
-float* rotation(float Yaw/*g*/, float Pitch/*b*/, float roll /*a*/, float rotate_ver, float rotate_hor)
+void rotation(float Yaw/*g*/, float Pitch/*b*/, float roll /*a*/, float rotate_ver, float rotate_hor, float* rotate)
 {
-    float* rotate;
-    rotate = new float[2];
-
-    float new_ver, new_hor;
-    float z = sin(rotate_hor*pi/180);
-    float x = sqrt((1-z*z))*cos(rotate_ver*pi/180);
-    float y = sqrt((1-z*z))*sin(rotate_ver*pi/180);
+    
+    float32_t new_ver, new_hor;
+    float32_t z = arm_sin_f32(rotate_hor*pi/180);
+    float32_t z_c;
+    arm_sqrt_f32((1-z*z),&z_c);
+    float32_t x = z_c*arm_cos_f32(rotate_ver*pi/180);
+    float32_t y = z_c*arm_sin_f32(rotate_ver*pi/180);
     
     //printf("x y z = %f %f %f\n",x,y,z);
 
-    float new_x = x*cos(Yaw)*cos(Pitch) + y*sin(Yaw)*cos(Pitch) - z*sin(Pitch);
-    float new_y = x*(-sin(Yaw)*cos(roll)+cos(Yaw)*sin(Pitch)*sin(roll)) + y*( cos(Yaw)*cos(roll) + sin(Yaw)*sin(Pitch)*sin(roll)) + z*cos(Pitch)*sin(roll);
-    float new_z = x*(sin(Yaw)*sin(roll) +cos(Yaw)*sin(Pitch)*cos(roll)) + y*(-cos(Yaw)*sin(roll) + sin(Yaw)*sin(Pitch)*cos(roll)) + z*cos(Pitch)*cos(roll);
+    float32_t new_x = x*arm_cos_f32(Yaw)*arm_cos_f32(Pitch) + y*arm_sin_f32(Yaw)*arm_cos_f32(Pitch) - z*arm_sin_f32(Pitch);
+    float32_t new_y = x*(-arm_sin_f32(Yaw)*arm_cos_f32(roll)+arm_cos_f32(Yaw)*arm_sin_f32(Pitch)*arm_sin_f32(roll)) + y*( arm_cos_f32(Yaw)*arm_cos_f32(roll) + arm_sin_f32(Yaw)*arm_sin_f32(Pitch)*arm_sin_f32(roll)) + z*arm_cos_f32(Pitch)*arm_sin_f32(roll);
+    float32_t new_z = x*(arm_sin_f32(Yaw)*arm_sin_f32(roll) +arm_cos_f32(Yaw)*arm_sin_f32(Pitch)*arm_cos_f32(roll)) + y*(-arm_cos_f32(Yaw)*arm_sin_f32(roll) + arm_sin_f32(Yaw)*arm_sin_f32(Pitch)*arm_cos_f32(roll)) + z*arm_cos_f32(Pitch)*arm_cos_f32(roll);
 
     //printf("x y z = %f %f %f\n",new_x,new_y,new_z);
-    float new_rotate_ver = acos(new_x/sqrt(new_x*new_x+new_y*new_y))*180/pi;
-    float new_rotate_hor = asin(new_z)*180/pi;
+    float32_t new_rotate_ver = acos(new_x/sqrt(new_x*new_x+new_y*new_y))*180/pi;
+    float32_t new_rotate_hor = asin(new_z)*180/pi;
     if(new_y<0.001)
     {
         new_rotate_ver =360-new_rotate_ver;
@@ -31,10 +35,10 @@ float* rotation(float Yaw/*g*/, float Pitch/*b*/, float roll /*a*/, float rotate
         new_rotate_hor = 180 - new_rotate_hor;
         new_rotate_ver -= (new_rotate_ver<180)? -180:180;
     }
-    rotate[0] = new_rotate_ver;
-    rotate[1] = new_rotate_hor;
+    rotate[0] = (float)new_rotate_hor;
+    rotate[1] = (float)new_rotate_ver;
     
-    return rotate;
+    return;
 }
 // int main()
 // {

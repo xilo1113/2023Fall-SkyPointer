@@ -18,7 +18,7 @@ const float soft_iron[3][3] = {
     { -0.003, -0.000,  0.980 }
 };
 const float hard_iron[3] = { -12.46, 8.24, -17.40};
-float* calculate_three_angle(int16_t *acco_data, int16_t *mego_data){
+void calculate_three_angle(int16_t *acco_data, int16_t *mego_data,float* angle){
     int hi_cal[3];
     for (int i = 0; i < 3; i++ ) {
         hi_cal[i] = mego_data[i] - hard_iron[i];
@@ -28,16 +28,15 @@ float* calculate_three_angle(int16_t *acco_data, int16_t *mego_data){
                        (soft_iron[i][1] * hi_cal[1])+ 
                        (soft_iron[i][2] * hi_cal[2]);
     }
-    float *angle = new float[3];
-    float16_t roll, yaw;
+    float16_t roll, yaw, pitch;
     arm_atan2_f16((float16_t)acco_data[1],(float16_t)acco_data[2],&roll);
-    float pitch = asinf(acco_data[0]/sqrt(acco_data[0]*acco_data[0]+acco_data[1]*acco_data[1]+acco_data[2]*acco_data[2]));
+    arm_atan2_f16((float16_t)acco_data[0],(float16_t)acco_data[2],&pitch);    
     arm_atan2_f16((float16_t)(mego_data[0]*cos(pitch)+mego_data[1]*sin(roll)*sin(pitch)+mego_data[2]*sin(pitch)*cos(roll)),(float16_t)mego_data[2]*sin(roll)-mego_data[1]*cos(roll),&yaw);
     //float yaw = (float)atan2(mego_data[0],mego_data[1]);
     angle[0] = yaw;
     angle[1] = pitch;
     angle[2] = roll;
-    return angle;
+    return;
 }
 float calculate_Azimuth(int16_t *acco_data, int16_t *mego_data){
     int hi_cal[3];
@@ -51,6 +50,7 @@ float calculate_Azimuth(int16_t *acco_data, int16_t *mego_data){
     }
     float16_t roll, yaw;
     arm_atan2_f16((float16_t)acco_data[1],(float16_t)acco_data[2],&roll);
+    arm_atan2_f16((float16_t)acco_data[0],(float16_t)acco_data[2],&roll);
     float pitch = asinf(acco_data[0]/sqrt(acco_data[0]*acco_data[0]+acco_data[1]*acco_data[1]+acco_data[2]*acco_data[2]));
     arm_atan2_f16((float16_t)(mego_data[0]*cos(pitch)+mego_data[1]*sin(roll)*sin(pitch)+mego_data[2]*sin(pitch)*cos(roll)),(float16_t)mego_data[2]*sin(roll)-mego_data[1]*cos(roll),&yaw);
     //float yaw = (float)atan2(mego_data[0],mego_data[1]);
