@@ -2,11 +2,11 @@
 #include "wifi_helper.h"
 #include <cstdio>
 #include <string>
-
+DigitalOut wifi_led(LED3);
 class MySocket {
     static constexpr size_t MAX_NUMBER_OF_ACCESS_POINTS = 10;
     static constexpr size_t MAX_MESSAGE_RECEIVED_LENGTH = 100;
-    static constexpr size_t REMOTE_PORT = 8817; // standard HTTP port
+    static constexpr size_t REMOTE_PORT = 8888; // standard HTTP port
 
 public:
     MySocket() : _net(NetworkInterface::get_default_instance())
@@ -76,6 +76,12 @@ public:
             return;
         }
         printf("socket_connected\n");
+        for(int i = 0; i < 30;i++){
+            wifi_led.write(0);
+            wait_us(1000*100);
+            wifi_led.write(1);
+            wait_us(1000*100);
+        }
     }
     bool send_data(){
         const char buffer[] = "hello\n";
@@ -118,9 +124,12 @@ public:
                 connect_socket();
             }else if(result > 0){
                 printf("%.*s\r\n\r\n", strstr(buffer, "\n") - buffer, buffer);
+                wifi_led.write(1);
                 break;
             }else{
-                printf("Server shut down\n");
+                printf("Can't not find server\n");
+                wifi_led.write(0);
+                wait_us(10*1000*1000);
             }
         }
 

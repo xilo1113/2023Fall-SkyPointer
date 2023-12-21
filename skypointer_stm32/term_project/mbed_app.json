@@ -2,7 +2,7 @@
     "config": {
         "hostname": {
             "help": "The demo will try to connect to this web address on port 80 (or port 443 when using tls).",
-            "value": "\"192.168.191.116\""
+            "value": "\"192.168.205.116\""
         },
         "use-tls-socket": {
             "value": false
