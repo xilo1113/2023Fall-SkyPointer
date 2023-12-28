@@ -19,8 +19,8 @@ def get_ra_dec(name):
     """
     api_url1 = f'https://api.api-ninjas.com/v1/stars?name={name}'
     api_url2 = f'https://api.api-ninjas.com/v1/stars?constellation={name}'
-    response1 = requests.get(api_url1, headers={'X-Api-Key': 'D30V9/R9NBt9p2qQs041aA==aQT4RW3c243DM3ZR'})
-    response2 = requests.get(api_url2, headers={'X-Api-Key': 'D30V9/R9NBt9p2qQs041aA==aQT4RW3c243DM3ZR'})
+    response1 = requests.get(api_url1, headers={'X-Api-Key': 'YOUR_API_KEY'})
+    response2 = requests.get(api_url2, headers={'X-Api-Key': 'YOUR_API_KEY'})
     if response2.status_code == requests.codes.ok:
         data2 = response2.json()
         if data2:

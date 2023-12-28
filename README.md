@@ -18,7 +18,15 @@ modify the port address in `source/my_wifi.h` to the port socket is listening to
 ```c++
         static constexpr size_t REMOTE_PORT = YOUR_PORT;
 ```
-#### 1.2.2 Run
+#### 1.2.3 Database set up
+Register an account in [Ninja api](https://api-ninjas.com/), and get the api key.
+Replace 
+Fill in your api key into `trans.py`
+```python
+    response1 = requests.get(api_url1, headers={'X-Api-Key': 'YOUR_API_KEY'})
+    response2 = requests.get(api_url2, headers={'X-Api-Key': 'YOUR_API_KEY'})
+```
+#### 1.2.4 Run
 Run main.py, and the program will start to listen to the port and wait for the data from the microcontroller.
 GUI will pop up and you can type the star you want to observe in the text box and click ENTER.
 ### 1.2 stm32 side
@@ -80,6 +88,13 @@ Please don't move the microcontroller during the calibration.
 If you want to recalibrate the microcontroller, press the user button on the microcontroller.  
 Please do the calibration on flat serface. Our device aren't stable enough to do the calibration on a tilted floor.
 
-#### 2.2.3 observe
+#### 2.2.3 Observe
 Once the calibration is done, you can key in the star you want to observe in the text box and click ENTER.
 Sky pointer will point to the star you want to observe.
+## 3. Reference
+
+* [Ninja api](https://api-ninjas.com/)
+* [How to Calibrate a Magnetometer](https://www.digikey.com/en/maker/projects/how-to-calibrate-a-magnetometer/50f6bc8f36454a03b664dca30cf33a8b)
+  
+  
+
