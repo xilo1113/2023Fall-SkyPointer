@@ -1,0 +1,5 @@
+pygame
+requests
+socket
+datetime
+astropy
